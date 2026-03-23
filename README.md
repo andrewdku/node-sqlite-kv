@@ -21,19 +21,24 @@ bun add node-sqlite-kv
 ```js
 import { JournalModes, KVSync } from "node-sqlite-kv"
 
+// none of these options are required
 const kv = new KVSync({
-    // sqlite journal mode
-    // default DELETE for in-memory stores,
-    // and WAL for persistent ones
+    // sqlite journal mode; defaults to DELETE for
+    // in-memory stores, or WAL for persistent ones
     journalMode: JournalModes.WAL,
 
     // whether the database is open upon
-    // being instantiated, defaults to true
+    // being instantiated; defaults to true
     open: true,
 
-    // use :memory: for in-memory storage
-    // path is optional, defaults to :memory:
+    // defaults to :memory: (in-memory storage)
     path: "./data.sqlite",
+
+    // override the default table name of "kv"
+    // note: it's not recommended to use one file for
+    // multiple key value stores; this is only
+    // for the ability of changing the default name
+    tableName: "kv",
 })
 
 // set values
