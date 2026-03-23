@@ -254,6 +254,28 @@ export class KVSync<T = any> {
     }
 
     /**
+     * Check if a key exists
+     * @param key Key name
+     * @returns Boolean representing whether a key exists
+     */
+    public exists(key: string): boolean {
+        if (!this.#db.isOpen) {
+            throw new KVError("exists", "Database is not open");
+        }
+
+        if (!key || typeof key !== "string") {
+            throw new KVError(
+                "exists",
+                "Key must be provided and be a non-empty string."
+            );
+        }
+        return (
+            this.#db.prepare("SELECT 1 FROM kv WHERE key = ?;").get(key) !==
+            undefined
+        );
+    }
+
+    /**
      * Open the database
      */
     public open(): void {
