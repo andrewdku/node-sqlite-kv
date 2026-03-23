@@ -14,6 +14,7 @@ export interface KVSyncProps {
     journalMode?: JournalMode
     open?: boolean
     path?: SQLitePath
+    tableName?: string
 }
 
 /**

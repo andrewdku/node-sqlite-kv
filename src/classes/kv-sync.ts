@@ -12,6 +12,8 @@ import path from "node:path"
 export class KVSync<T = any> {
     #db: DatabaseSync
 
+    public tableName: string
+
     /**
      * Instantiate a new key-value store
      * @param props KVSync options
@@ -23,6 +25,7 @@ export class KVSync<T = any> {
             fs.mkdirSync(path.dirname(dbPath), { recursive: true })
         }
 
+        this.tableName = props?.tableName ?? "kv"
         this.#db = new DatabaseSync(dbPath, {
             open: props?.open ?? true,
         })
@@ -34,7 +37,7 @@ export class KVSync<T = any> {
             )
 
             this.#db.exec(
-                "CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY NOT NULL, value BLOB NOT NULL) STRICT;"
+                `CREATE TABLE IF NOT EXISTS ${this.tableName} (key TEXT PRIMARY KEY NOT NULL, value BLOB NOT NULL) STRICT`
             )
         }
     }
@@ -62,7 +65,9 @@ export class KVSync<T = any> {
         }
 
         this.#db
-            .prepare("INSERT OR REPLACE INTO kv (key, value) VALUES (?, ?);")
+            .prepare(
+                `INSERT OR REPLACE INTO ${this.tableName} (key, value) VALUES (?, ?)`
+            )
             .run(key, serialize(value))
 
         return value
@@ -82,7 +87,10 @@ export class KVSync<T = any> {
             throw new KVError("get", "Key must be provided and be a non-empty string.")
         }
 
-        const row = this.#db.prepare("SELECT value FROM kv WHERE key = ?;").get(key)
+        const row = this.#db
+            .prepare(`SELECT value FROM ${this.tableName} WHERE key = ?`)
+            .get(key)
+
         return row ? (deserialize(row.value as any) as K) : undefined
     }
 
@@ -100,7 +108,7 @@ export class KVSync<T = any> {
             throw new KVError("delete", "Key must be provided and be a non-empty string.")
         }
 
-        this.#db.prepare("DELETE FROM kv WHERE key = ?;").run(key)
+        this.#db.prepare(`DELETE FROM ${this.tableName} WHERE key = ?`).run(key)
         return this
     }
 
@@ -115,7 +123,9 @@ export class KVSync<T = any> {
             throw new KVError("all", "Database is not open")
         }
 
-        const rows = this.#db.prepare("SELECT key, value FROM kv;").iterate()
+        const rows = this.#db
+            .prepare(`SELECT key, value FROM ${this.tableName}`)
+            .iterate()
         const result: { key: string; value: K }[] = []
 
         for (const row of rows as any) {
@@ -138,7 +148,7 @@ export class KVSync<T = any> {
             throw new KVError("clear", "Database is not open")
         }
 
-        this.#db.exec("DELETE FROM kv;")
+        this.#db.exec(`DELETE FROM ${this.tableName}`)
         return this
     }
 
@@ -158,7 +168,7 @@ export class KVSync<T = any> {
             )
         }
 
-        this.#db.exec(`PRAGMA journal_mode = ${mode};`)
+        this.#db.exec(`PRAGMA journal_mode = ${mode}`)
         return this
     }
 
@@ -214,7 +224,7 @@ export class KVSync<T = any> {
         }
 
         try {
-            this.#db.exec("BEGIN TRANSACTION;")
+            this.#db.exec("BEGIN TRANSACTION")
             callback(tx)
 
             for (const [key, value] of newMap.entries()) {
@@ -225,9 +235,9 @@ export class KVSync<T = any> {
                 }
             }
 
-            this.#db.exec("COMMIT;")
+            this.#db.exec("COMMIT")
         } catch (error: any) {
-            this.#db.exec("ROLLBACK;")
+            this.#db.exec("ROLLBACK")
             throw error
         }
 
@@ -257,7 +267,11 @@ export class KVSync<T = any> {
         if (!key || typeof key !== "string") {
             throw new KVError("exists", "Key must be provided and be a non-empty string.")
         }
-        return this.#db.prepare("SELECT 1 FROM kv WHERE key = ?;").get(key) !== undefined
+
+        return (
+            this.#db.prepare(`SELECT 1 FROM ${this.tableName} WHERE key = ?`).get(key) !==
+            undefined
+        )
     }
 
     /**
@@ -269,7 +283,7 @@ export class KVSync<T = any> {
         }
 
         return (
-            this.#db.prepare("SELECT COUNT(*) as count FROM kv;").get() as {
+            this.#db.prepare(`SELECT COUNT(*) as count FROM ${this.tableName}`).get() as {
                 count: number
             }
         ).count
@@ -284,7 +298,7 @@ export class KVSync<T = any> {
         }
 
         return (
-            this.#db.prepare("SELECT key FROM kv;").all() as {
+            this.#db.prepare(`SELECT key FROM ${this.tableName}`).all() as {
                 key: string
             }[]
         ).map((row) => row.key)
@@ -299,7 +313,7 @@ export class KVSync<T = any> {
         }
 
         return (
-            this.#db.prepare("SELECT value FROM kv;").all() as {
+            this.#db.prepare(`SELECT value FROM ${this.tableName}`).all() as {
                 value: any
             }[]
         ).map((row) => deserialize(row.value) as K)
@@ -315,7 +329,7 @@ export class KVSync<T = any> {
 
         this.#db.open()
         this.#db.exec(
-            "CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY NOT NULL, value BLOB NOT NULL) STRICT;"
+            `CREATE TABLE IF NOT EXISTS ${this.tableName} (key TEXT PRIMARY KEY NOT NULL, value BLOB NOT NULL) STRICT`
         )
     }
 
