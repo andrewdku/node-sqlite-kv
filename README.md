@@ -17,7 +17,7 @@ bun add node-sqlite-kv
 ## Example
 
 ```js
-import { KVSync } from "node-sqlite-kv";
+import { KVSync } from "node-sqlite-kv"
 
 const kv = new KVSync({
     // sqlite journal mode
@@ -32,36 +32,36 @@ const kv = new KVSync({
     // use :memory: for in-memory storage
     // path is optional, defaults to :memory:
     path: "./data.sqlite",
-});
+})
 
 // set values
-kv.set("number", 123);
-kv.set("string", "hello world");
-kv.set("boolean", true);
-kv.set("null", null);
-kv.set("array", [1, 2, 3]);
-kv.set("object", { settings: { theme: "dark" } });
-kv.set("date", new Date());
+kv.set("number", 123)
+kv.set("string", "hello world")
+kv.set("boolean", true)
+kv.set("null", null)
+kv.set("array", [1, 2, 3])
+kv.set("object", { settings: { theme: "dark" } })
+kv.set("date", new Date())
 
 // get values
-kv.get("number"); // 123
-kv.get("string"); // "hello world"
-kv.get("boolean"); // true
-kv.get("null"); // null
-kv.get("array"); // [1, 2, 3]
-kv.get("object"); // { settings: { theme: "dark" } }
-kv.get("date"); // Date
+kv.get("number") // 123
+kv.get("string") // "hello world"
+kv.get("boolean") // true
+kv.get("null") // null
+kv.get("array") // [1, 2, 3]
+kv.get("object") // { settings: { theme: "dark" } }
+kv.get("date") // Date
 
 // update values
-kv.set("number", 999);
-kv.get("number"); // 999
+kv.set("number", 999)
+kv.get("number") // 999
 
 // delete values
-kv.delete("array");
-kv.get("array"); // undefined
+kv.delete("array")
+kv.get("array") // undefined
 
 // list all entries
-kv.all();
+kv.all()
 // [
 //      { key: "string", value: "hello world" },
 //      { key: "number", value: 999 },
@@ -70,52 +70,52 @@ kv.all();
 // ];
 
 // check if a key exists
-kv.exists("string"); // true
-kv.exists("nonexistent"); // false
+kv.exists("string") // true
+kv.exists("nonexistent") // false
 
 // get total number of entries
-kv.size(); // 6
+kv.size() // 6
 
 // get all keys
-kv.keys(); // ["string", "number", "boolean", "null", "object", "date"]
+kv.keys() // ["string", "number", "boolean", "null", "object", "date"]
 
 // get all values
-kv.values(); // ["hello world", 999, true, null, { settings: { theme: "dark" } }, Date]
+kv.values() // ["hello world", 999, true, null, { settings: { theme: "dark" } }, Date]
 
 // transactions
-kv.set("user:1", { name: "Andrew", age: 19 });
-kv.set("user:2", { name: "Josh", age: 22 });
-kv.set("user:3", { name: "Gabe", age: 20 });
+kv.set("user:1", { name: "Andrew", age: 19 })
+kv.set("user:2", { name: "Josh", age: 22 })
+kv.set("user:3", { name: "Gabe", age: 20 })
 
 // ...store what changed in transactions
 const { oldValues, newValues } = kv.transaction((tx) => {
-    tx.set("user:1", { name: "Andrew", age: 20 });
-    tx.set("user:4", { name: "Kris", age: 21 });
-    tx.delete("user:2");
-});
+    tx.set("user:1", { name: "Andrew", age: 20 })
+    tx.set("user:4", { name: "Kris", age: 21 })
+    tx.delete("user:2")
+})
 
 // delete all entries
-kv.clear();
+kv.clear()
 
 // close the database
-kv.close();
+kv.close()
 ```
 
 ### TS Generics Example
 
 ```ts
-import { KVSync } from "node-sqlite-kv";
-const kv = new KVSync({ path: "./data.sqlite" });
+import { KVSync } from "node-sqlite-kv"
+const kv = new KVSync({ path: "./data.sqlite" })
 
 interface User {
-    name: string;
+    name: string
 }
 
-kv.set("user", { name: "Andrew" });
-kv.get<User>("user"); // User | null
+kv.set("user", { name: "Andrew" })
+kv.get<User>("user") // User | null
 
-kv.set("example", 123);
-kv.get<number>("example"); // number | null
+kv.set("example", 123)
+kv.get<number>("example") // number | null
 ```
 
 ## Contributing

@@ -1,22 +1,22 @@
-import { JournalModes } from "@/constants";
+import { JournalModes } from "@/constants"
 
 /**
  * SQLite journal mode
  * @default DELETE (:memory: databases)
  * @default WAL (persistent databases)
  */
-export type JournalMode = (typeof JournalModes)[keyof typeof JournalModes];
+export type JournalMode = (typeof JournalModes)[keyof typeof JournalModes]
 
 /**
  * Configuration options for instantiating a KVSync
  */
 export interface KVSyncProps {
-    journalMode?: JournalMode;
-    open?: boolean;
-    path?: SQLitePath;
+    journalMode?: JournalMode
+    open?: boolean
+    path?: SQLitePath
 }
 
 /**
  * File path or :memory: (for SQLite use)
  */
-export type SQLitePath = ":memory:" | (string & {});
+export type SQLitePath = ":memory:" | (string & {})

@@ -8,4 +8,4 @@ export const JournalModes = {
     Persist: "PERSIST",
     Truncate: "TRUNCATE",
     WAL: "WAL",
-} as const;
+} as const

@@ -1,4 +1,4 @@
-import { defineConfig } from "tsdown";
+import { defineConfig } from "tsdown"
 
 export default defineConfig({
     cjsDefault: true,
@@ -12,4 +12,4 @@ export default defineConfig({
     shims: true,
     skipNodeModulesBundle: true,
     target: "node22",
-});
+})
