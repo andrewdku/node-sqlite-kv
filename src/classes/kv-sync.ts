@@ -2,7 +2,7 @@ import type { JournalMode, KVSyncOptions } from "@/types";
 import { DatabaseSync } from "node:sqlite";
 import { KVError } from "@/classes/kv-error";
 import { deserialize, serialize } from "node:v8";
-import { journalModes } from "@/constants";
+import { JournalModes } from "@/constants";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -26,7 +26,7 @@ export class KVSync<T = any> {
         this.#db = new DatabaseSync(dbPath);
         this.setJournalMode(
             options?.journalMode ??
-                (dbPath !== ":memory:" ? journalModes.WAL : journalModes.Delete)
+                (dbPath !== ":memory:" ? JournalModes.WAL : JournalModes.Delete)
         );
 
         this.#db.exec(
@@ -155,10 +155,10 @@ export class KVSync<T = any> {
             throw new KVError("setJournalMode", "Database is not open");
         }
 
-        if (!Object.values(journalModes).includes(mode)) {
+        if (!Object.values(JournalModes).includes(mode)) {
             throw new KVError(
                 "setJournalMode",
-                `Invalid journal mode specified - received: "${mode}", expected one of: ${Object.values(journalModes).join(", ")}`
+                `Invalid journal mode specified - received: "${mode}", expected one of: ${Object.values(JournalModes).join(", ")}`
             );
         }
 

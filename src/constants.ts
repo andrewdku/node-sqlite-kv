@@ -1,10 +1,10 @@
 /**
  * A list of journal modes SQLite supports
  */
-export const journalModes = {
+export const JournalModes = {
     Delete: "DELETE",
     Memory: "MEMORY",
-    Off: "OFF",
+    OFF: "OFF",
     Persist: "PERSIST",
     Truncate: "TRUNCATE",
     WAL: "WAL",
