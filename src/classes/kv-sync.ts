@@ -291,6 +291,36 @@ export class KVSync<T = any> {
     }
 
     /**
+     * Get all keys in the database
+     */
+    public keys(): string[] {
+        if (!this.#db.isOpen) {
+            throw new KVError("keys", "Database is not open");
+        }
+
+        return (
+            this.#db.prepare("SELECT key FROM kv;").all() as {
+                key: string;
+            }[]
+        ).map((row) => row.key);
+    }
+
+    /**
+     * Get all values in the database
+     */
+    public values<K = T>(): K[] {
+        if (!this.#db.isOpen) {
+            throw new KVError("values", "Database is not open");
+        }
+
+        return (
+            this.#db.prepare("SELECT value FROM kv;").all() as {
+                value: any;
+            }[]
+        ).map((row) => deserialize(row.value) as K);
+    }
+
+    /**
      * Open the database
      */
     public open(): void {
