@@ -3,6 +3,7 @@ import { defineConfig } from "tsdown"
 export default defineConfig({
     cjsDefault: true,
     clean: true,
+    deps: { skipNodeModulesBundle: true },
     dts: true,
     entry: ["src/index.ts"],
     format: ["cjs"],
@@ -10,6 +11,5 @@ export default defineConfig({
     platform: "node",
     removeNodeProtocol: false,
     shims: true,
-    skipNodeModulesBundle: true,
     target: "node22",
 })
