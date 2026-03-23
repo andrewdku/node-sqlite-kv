@@ -1,7 +1,7 @@
 {
     "name": "node-sqlite-kv",
     "description": "Key-value store with node:sqlite",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "UNLICENSED",
     "repository": {
         "url": "https://github.com/andrewdku/node-sqlite-kv"
