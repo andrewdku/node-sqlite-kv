@@ -1,6 +1,9 @@
 <h1 align="center">node-sqlite-kv</h1>
 
-> Key-value store with node:sqlite (Node.js v22.5.0 or higher is required)
+A simple key-value store with `node:sqlite`.
+
+> 💡 Note
+> Node.js v22 or higher is required.
 
 ## Installation
 
@@ -17,13 +20,13 @@ bun add node-sqlite-kv
 ## Example
 
 ```js
-import { KVSync } from "node-sqlite-kv"
+import { JournalModes, KVSync } from "node-sqlite-kv"
 
 const kv = new KVSync({
     // sqlite journal mode
     // default DELETE for in-memory stores,
     // and WAL for persistent ones
-    journalMode: "WAL",
+    journalMode: JournalModes.WAL,
 
     // whether the database is open upon
     // being instantiated, defaults to true
