@@ -27,14 +27,16 @@ export class KVSync<T = any> {
             open: props?.open ?? true,
         });
 
-        this.setJournalMode(
-            props?.journalMode ??
-                (dbPath !== ":memory:" ? JournalModes.WAL : JournalModes.Delete)
-        );
+        if (props?.open !== false) {
+            this.setJournalMode(
+                props?.journalMode ??
+                    (dbPath !== ":memory:" ? JournalModes.WAL : JournalModes.Delete)
+            );
 
-        this.#db.exec(
-            "CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY NOT NULL, value BLOB NOT NULL) STRICT;"
-        );
+            this.#db.exec(
+                "CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY NOT NULL, value BLOB NOT NULL) STRICT;"
+            );
+        }
     }
 
     /**
@@ -256,8 +258,12 @@ export class KVSync<T = any> {
      */
     public open(): void {
         if (this.#db.isOpen) {
-            throw new KVError("open", "Database is open");
+            throw new KVError("open", "Database is already open");
         }
+
+        this.#db.exec(
+            "CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY NOT NULL, value BLOB NOT NULL) STRICT;"
+        );
     }
 
     /**
