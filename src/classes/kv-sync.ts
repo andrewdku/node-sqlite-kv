@@ -180,8 +180,8 @@ export class KVSync<T = any> {
      * @returns Object containing oldValues and newValues each containing arrays of keys and values
      */
     public transaction<R>(callback: (kv: KVSync<T>) => R): {
-        oldValues: { key: string; value: T | null | undefined }[]
-        newValues: { key: string; value: T | null }[]
+        oldValues: { key: string; value: T | undefined }[]
+        newValues: { key: string; value: T | undefined }[]
     } {
         if (!this.#db.isOpen) {
             throw new KVError("transaction", "Database is not open")
@@ -201,27 +201,27 @@ export class KVSync<T = any> {
             )
         }
 
-        const oldMap = new Map<string, T | null | undefined>()
-        const newMap = new Map<string, T | null>()
+        const oldMap = new Map<string, T | undefined>()
+        const newMap = new Map<string, T | undefined>()
         const tx = Object.create(this)
 
-        tx.set = <K extends T>(key: string, value: K | undefined): K | null => {
+        tx.set = <K extends T>(key: string, value: K | undefined): K | undefined => {
             if (!oldMap.has(key)) {
                 const oldValue = this.get<K>(key)
-                oldMap.set(key, oldValue === null ? undefined : oldValue)
+                oldMap.set(key, oldValue)
             }
 
-            newMap.set(key, value ?? null)
-            return value ?? null
+            newMap.set(key, value)
+            return value
         }
 
         tx.delete = (key: string): KVSync => {
             if (!oldMap.has(key)) {
                 const oldValue = this.get<T>(key)
-                oldMap.set(key, oldValue === null ? undefined : oldValue)
+                oldMap.set(key, oldValue)
             }
 
-            newMap.set(key, null)
+            newMap.set(key, undefined)
             return tx
         }
 
@@ -230,7 +230,7 @@ export class KVSync<T = any> {
             callback(tx)
 
             for (const [key, value] of newMap.entries()) {
-                if (value === null) {
+                if (value === undefined) {
                     this.delete(key)
                 } else {
                     this.set(key, value)
