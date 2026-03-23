@@ -1,4 +1,4 @@
-import type { JournalMode, KVSyncOptions } from "@/types";
+import type { JournalMode, KVSyncProps as KVSyncProps } from "@/types";
 import { DatabaseSync } from "node:sqlite";
 import { KVError } from "@/classes/kv-error";
 import { deserialize, serialize } from "node:v8";
@@ -14,21 +14,21 @@ export class KVSync<T = any> {
 
     /**
      * Instantiate a new key-value store
-     * @param options KVSync options
+     * @param props KVSync options
      */
-    public constructor(options?: KVSyncOptions) {
-        const dbPath = options?.path ?? ":memory:";
+    public constructor(props?: KVSyncProps) {
+        const dbPath = props?.path ?? ":memory:";
 
         if (dbPath !== ":memory:") {
             fs.mkdirSync(path.dirname(dbPath), { recursive: true });
         }
 
         this.#db = new DatabaseSync(dbPath, {
-            open: options?.open ?? true,
+            open: props?.open ?? true,
         });
 
         this.setJournalMode(
-            options?.journalMode ??
+            props?.journalMode ??
                 (dbPath !== ":memory:" ? JournalModes.WAL : JournalModes.Delete)
         );
 
