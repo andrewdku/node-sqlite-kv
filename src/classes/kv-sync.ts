@@ -276,6 +276,21 @@ export class KVSync<T = any> {
     }
 
     /**
+     * Get total number of entries in the database
+     */
+    public size(): number {
+        if (!this.#db.isOpen) {
+            throw new KVError("size", "Database is not open");
+        }
+
+        return (
+            this.#db.prepare("SELECT COUNT(*) as count FROM kv;").get() as {
+                count: number;
+            }
+        ).count;
+    }
+
+    /**
      * Open the database
      */
     public open(): void {
