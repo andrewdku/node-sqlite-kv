@@ -20,14 +20,18 @@ bun add node-sqlite-kv
 import { KVSync } from "node-sqlite-kv";
 
 const kv = new KVSync({
-    // use :memory: for in-memory storage
-    // path is optional, defaults to :memory:
-    path: "./data.sqlite",
-
     // sqlite journal mode
     // default DELETE for in-memory stores,
     // and WAL for persistent ones
     journalMode: "WAL",
+
+    // whether the database is open upon
+    // being instantiated, defaults to true
+    open: true,
+
+    // use :memory: for in-memory storage
+    // path is optional, defaults to :memory:
+    path: "./data.sqlite",
 });
 
 // set values
@@ -82,6 +86,23 @@ kv.clear();
 
 // close the database
 kv.close();
+```
+
+### TS Generics Example
+
+```ts
+import { KVSync } from "node-sqlite-kv";
+const kv = new KVSync({ path: "./data.sqlite" });
+
+interface User {
+    name: string;
+}
+
+kv.set("user", { name: "Andrew" });
+kv.get<User>("user"); // User | null
+
+kv.set("example", 123);
+kv.get<number>("example"); // number | null
 ```
 
 ## Contributing
