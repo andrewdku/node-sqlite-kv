@@ -6,13 +6,15 @@ import { JournalModes } from "@/constants"
 import fs from "node:fs"
 import path from "node:path"
 
-/**
- * Class representing a synchronous key-value store
- */
+/** Class representing a synchronous key-value store */
 export class KVSync<T = any> {
     #db: DatabaseSync
 
-    public tableName: string
+    /**
+     * The name of the table with keys and values
+     * @default "kv"
+     */
+    public tableName: string = "kv"
 
     /**
      * Instantiate a new key-value store
@@ -123,10 +125,10 @@ export class KVSync<T = any> {
             throw new KVError("all", "Database is not open")
         }
 
+        const result: { key: string; value: K }[] = []
         const rows = this.#db
             .prepare(`SELECT key, value FROM ${this.tableName}`)
             .iterate()
-        const result: { key: string; value: K }[] = []
 
         for (const row of rows as any) {
             const key = row.key as string
@@ -274,9 +276,7 @@ export class KVSync<T = any> {
         )
     }
 
-    /**
-     * Get total number of entries in the database
-     */
+    /** Get total number of entries in the database */
     public size(): number {
         if (!this.#db.isOpen) {
             throw new KVError("size", "Database is not open")
@@ -289,9 +289,7 @@ export class KVSync<T = any> {
         ).count
     }
 
-    /**
-     * Get all keys in the database
-     */
+    /** Get all keys in the database */
     public keys(): string[] {
         if (!this.#db.isOpen) {
             throw new KVError("keys", "Database is not open")
@@ -304,9 +302,7 @@ export class KVSync<T = any> {
         ).map((row) => row.key)
     }
 
-    /**
-     * Get all values in the database
-     */
+    /** Get all values in the database */
     public values<K = T>(): K[] {
         if (!this.#db.isOpen) {
             throw new KVError("values", "Database is not open")
@@ -319,10 +315,8 @@ export class KVSync<T = any> {
         ).map((row) => deserialize(row.value) as K)
     }
 
-    /**
-     * Open the database
-     */
-    public open(): void {
+    /** Open the database */
+    public open(): KVSync {
         if (this.#db.isOpen) {
             throw new KVError("open", "Database is already open")
         }
@@ -331,16 +325,17 @@ export class KVSync<T = any> {
         this.#db.exec(
             `CREATE TABLE IF NOT EXISTS ${this.tableName} (key TEXT PRIMARY KEY NOT NULL, value BLOB NOT NULL) STRICT`
         )
+
+        return this
     }
 
-    /**
-     * Close the database
-     */
-    public close(): void {
+    /** Close the database */
+    public close(): KVSync {
         if (!this.#db.isOpen) {
             throw new KVError("close", "Database is not open")
         }
 
         this.#db.close()
+        return this
     }
 }

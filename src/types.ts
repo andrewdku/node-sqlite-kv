@@ -7,9 +7,7 @@ import { JournalModes } from "@/constants"
  */
 export type JournalMode = (typeof JournalModes)[keyof typeof JournalModes]
 
-/**
- * Configuration options for instantiating a KVSync
- */
+/** KVSync configuration options */
 export interface KVSyncProps {
     journalMode?: JournalMode
     open?: boolean
@@ -17,7 +15,5 @@ export interface KVSyncProps {
     tableName?: string
 }
 
-/**
- * File path or :memory: (for SQLite use)
- */
+/** File path, or :memory: (for SQLite use) */
 export type SQLitePath = ":memory:" | (string & {})

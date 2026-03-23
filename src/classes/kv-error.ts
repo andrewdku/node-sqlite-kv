@@ -1,6 +1,4 @@
-/**
- * Class representing a KVError
- */
+/** Class representing a KVError */
 export class KVError extends Error {
     public static override name: string = "KVError"
     public readonly scope: string

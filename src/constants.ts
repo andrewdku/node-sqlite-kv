@@ -1,6 +1,4 @@
-/**
- * A list of journal modes SQLite supports
- */
+/** List of journal modes SQLite supports */
 export const JournalModes = {
     Delete: "DELETE",
     Memory: "MEMORY",
