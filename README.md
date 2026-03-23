@@ -126,4 +126,4 @@ kv.get<number>("example") // number | null
 
 ## License
 
-[MIT](LICENSE)
+[Unlicensed](LICENSE)
