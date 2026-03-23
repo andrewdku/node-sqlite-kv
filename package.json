@@ -4,31 +4,25 @@
     "version": "1.0.0",
     "license": "MIT",
     "repository": {
-        "url": "https://github.com/e60m5ss/node-sqlite-kv"
+        "url": "https://github.com/andrewdku/node-sqlite-kv"
     },
     "author": {
-        "name": "e60m5ss",
-        "url": "https://github.com/e60m5ss"
+        "name": "andrewdku",
+        "url": "https://github.com/andrewdku"
     },
-    "main": "./dist/index.mjs",
-    "module": "./dist/index.mjs",
-    "types": "./dist/index.d.mts",
+    "main": "./dist/index.cjs",
+    "exports": "./dist/index.cjs",
+    "types": "./dist/index.d.cts",
     "type": "module",
-    "exports": {
-        "default": "./dist/index.cjs",
-        "import": "./dist/index.mjs",
-        "require": "./dist/index.cjs",
-        "types": "./dist/index.d.cts"
-    },
     "engineStrict": true,
     "engines": {
         "node": ">=22.5.0"
     },
     "scripts": {
-        "build": "tsdown",
+        "build": "tsdown -c tsdown.config.mts",
         "format": "prettier --write . --config .prettierrc.json",
         "lint": "tsc --noEmit; prettier ./src --check --ignore-path=.prettierignore",
-        "prepublish": "tsdown"
+        "prepublish": "tsdown -c tsdown.config.mts"
     },
     "devDependencies": {
         "@types/node": "^25.2.1",
