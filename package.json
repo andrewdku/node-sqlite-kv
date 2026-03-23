@@ -19,10 +19,10 @@
         "node": ">=22.5.0"
     },
     "scripts": {
-        "build": "tsdown -c tsdown.config.mts",
+        "build": "tsdown -c tsdown.config.mjs",
         "format": "prettier --write . --config .prettierrc.json",
         "lint": "tsc --noEmit; prettier ./src --check --ignore-path=.prettierignore",
-        "prepublish": "tsdown -c tsdown.config.mts"
+        "prepublish": "tsdown -c tsdown.config.mjs"
     },
     "devDependencies": {
         "@types/node": "^25.2.1",
