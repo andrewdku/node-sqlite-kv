@@ -76,6 +76,39 @@ export class KVSync<T = any> {
     }
 
     /**
+     * Set a key only if it doesn't already exist
+     * @param key Key name
+     * @param value Key value
+     * @returns True if key was set, false if already existed
+     */
+    public setnx<K = T>(key: string, value: K): boolean {
+        if (!this.#db.isOpen) {
+            throw new KVError("setnx", "Database is not open")
+        }
+
+        if (!key || typeof key !== "string") {
+            throw new KVError("setnx", "Key must be provided and be a non-empty string")
+        }
+
+        if (value === undefined) {
+            throw new KVError(
+                "setnx",
+                "Provided value is undefined, did you mean to use delete()?"
+            )
+        }
+
+        try {
+            this.#db
+                .prepare(`INSERT INTO ${this.tableName} (key, value) VALUES (?, ?)`)
+                .run(key, serialize(value))
+
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    /**
      * Get a value from the database
      * @param key Key name
      * @returns Value or undefined
@@ -203,6 +236,7 @@ export class KVSync<T = any> {
 
         const oldMap = new Map<string, T | undefined>()
         const newMap = new Map<string, T | undefined>()
+        const setnxKeys = new Set<string>()
         const tx = Object.create(this)
 
         tx.set = <K extends T>(key: string, value: K | undefined): K | undefined => {
@@ -225,6 +259,21 @@ export class KVSync<T = any> {
             return tx
         }
 
+        tx.setnx = <K extends T>(key: string, value: K): boolean => {
+            if (!oldMap.has(key)) {
+                const oldValue = this.get<K>(key)
+                oldMap.set(key, oldValue)
+            }
+
+            if (oldMap.get(key) === undefined) {
+                newMap.set(key, value)
+                setnxKeys.add(key)
+                return true
+            }
+
+            return false
+        }
+
         try {
             this.#db.exec("BEGIN TRANSACTION")
             callback(tx)
@@ -232,6 +281,8 @@ export class KVSync<T = any> {
             for (const [key, value] of newMap.entries()) {
                 if (value === undefined) {
                     this.delete(key)
+                } else if (setnxKeys.has(key)) {
+                    this.setnx(key, value)
                 } else {
                     this.set(key, value)
                 }
