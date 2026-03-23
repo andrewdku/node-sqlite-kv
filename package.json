@@ -18,6 +18,12 @@
     "engines": {
         "node": ">=22"
     },
+    "files": [
+        "dist",
+        "LICENSE",
+        "package.json",
+        "README.md"
+    ],
     "packageManager": "pnpm@10.32.1",
     "scripts": {
         "build": "tsdown -c tsdown.config.mjs",
