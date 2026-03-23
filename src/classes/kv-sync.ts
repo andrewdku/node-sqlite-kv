@@ -208,7 +208,7 @@ export class KVSync<T = any> {
                 oldMap.set(key, oldValue === null ? undefined : oldValue);
             }
 
-            newMap.set(key, value as K);
+            newMap.set(key, value ?? null);
             return value ?? null;
         };
 
