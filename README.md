@@ -57,8 +57,8 @@ kv.set("number", 999);
 kv.get("number"); // 999
 
 // delete values
-kv.delete("array"); // [1, 2, 3]
-kv.get("array"); // null
+kv.delete("array");
+kv.get("array"); // undefined
 
 // list all entries
 kv.all();
@@ -68,6 +68,19 @@ kv.all();
 //      { key: "boolean", value: true },
 //      // ...
 // ];
+
+// check if a key exists
+kv.exists("string"); // true
+kv.exists("nonexistent"); // false
+
+// get total number of entries
+kv.size(); // 6
+
+// get all keys
+kv.keys(); // ["string", "number", "boolean", "null", "object", "date"]
+
+// get all values
+kv.values(); // ["hello world", 999, true, null, { settings: { theme: "dark" } }, Date]
 
 // transactions
 kv.set("user:1", { name: "Andrew", age: 19 });
