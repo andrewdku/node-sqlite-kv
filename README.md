@@ -2,8 +2,7 @@
 
 A simple key-value store with `node:sqlite`.
 
-> 💡 Note
-> Node.js v22 or higher is required.
+> ⚠️ Node.js v22 or higher is required.
 
 ## Installation
 
