@@ -1,8 +1,8 @@
 import type { JournalMode, KVSyncOptions } from "@/types";
 import { DatabaseSync } from "node:sqlite";
-import { KVError } from "@/classes/KVError";
+import { KVError } from "@/classes/kv-error";
 import { deserialize, serialize } from "node:v8";
-import { journalModes } from "@/utils";
+import { journalModes } from "@/constants";
 import fs from "node:fs";
 import path from "node:path";
 

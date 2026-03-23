@@ -1,4 +1,4 @@
-import { journalModes } from "@/utils";
+import { journalModes } from "@/constants";
 
 /**
  * SQLite journal mode
