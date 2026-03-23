@@ -74,9 +74,9 @@ export class KVSync<T = any> {
     /**
      * Get a value from the database
      * @param key Key name
-     * @returns Value or null
+     * @returns Value or undefined
      */
-    public get<K = T>(key: string): K | null {
+    public get<K = T>(key: string): K | undefined {
         if (!this.#db.isOpen) {
             throw new KVError("get", "Database is not open");
         }
@@ -89,7 +89,7 @@ export class KVSync<T = any> {
         }
 
         const row = this.#db.prepare("SELECT value FROM kv WHERE key = ?;").get(key);
-        return row ? (deserialize(row.value as any) as K) : null;
+        return row ? (deserialize(row.value as any) as K) : undefined;
     }
 
     /**
