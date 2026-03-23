@@ -328,6 +328,7 @@ export class KVSync<T = any> {
             throw new KVError("open", "Database is already open");
         }
 
+        this.#db.open();
         this.#db.exec(
             "CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY NOT NULL, value BLOB NOT NULL) STRICT;"
         );
