@@ -11,8 +11,9 @@ export type JournalMode = (typeof JournalModes)[keyof typeof JournalModes];
  * Configuration options for instantiating a KVSync
  */
 export interface KVSyncOptions {
-    path?: SQLitePath;
     journalMode?: JournalMode;
+    open?: boolean;
+    path?: SQLitePath;
 }
 
 /**

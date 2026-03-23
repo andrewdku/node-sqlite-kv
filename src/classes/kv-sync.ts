@@ -23,7 +23,10 @@ export class KVSync<T = any> {
             fs.mkdirSync(path.dirname(dbPath), { recursive: true });
         }
 
-        this.#db = new DatabaseSync(dbPath);
+        this.#db = new DatabaseSync(dbPath, {
+            open: options?.open ?? true,
+        });
+
         this.setJournalMode(
             options?.journalMode ??
                 (dbPath !== ":memory:" ? JournalModes.WAL : JournalModes.Delete)
